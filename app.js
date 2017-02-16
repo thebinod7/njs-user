@@ -4,6 +4,16 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const passport = require('passport');
 const mongoose = require('mongoose');
+const config = require('./config/database');
+mongoose.connect(config.database);
+
+mongoose.connection.on('connected',function () {
+    console.log('Connected to database:' + config.database);
+});
+
+mongoose.connection.on('error',function (err) {
+    console.log('Database error:' + ' ' + err);
+});
 
 const app = express();
 
@@ -19,6 +29,10 @@ app.use(express.static(path.join(__dirname,'public')));
 
 //Body parser middleware
 app.use(bodyParser.json());
+app.use(passport.initialize());
+app.use(passport.session());
+require('./config/passport')(passport);
+
 app.use('/users',users);
 
 //Index route
