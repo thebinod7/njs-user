@@ -14,13 +14,22 @@ router.post('/register',function (req,res,next) {
        email : req.body.email,
        password : req.body.password
    });
-   User.addUser(newUser,function (err,doc) {
-       if(err){
-           res.json({success : false, msg : 'Failed to register!'});
-       } else {
-           res.json({success:true,msg:'Success',result:doc})
+   User.getUserByEmail(newUser.email,function (err,userEmail) {
+       if(err) throw err;
+       if(userEmail){
+           res.json({msg:"Email already exists"})
        }
-   })
+       else {
+           User.addUser(newUser,function (err,doc) {
+               if(err){
+                   res.json({success : false, msg : 'Failed to register!'});
+               } else {
+                   res.json({success:true,msg:'Success',result:doc})
+               }
+           })
+       }
+   });
+
 });
 
 //Authenticate
@@ -53,9 +62,55 @@ router.post('/auth',function (req,res,next) {
     });
 });
 
+router.get('/:id',function (req,res,next) {
+    console.log(req.params.id);
+    User.findById(req.params.id, function (err, user) {
+        if (err) {
+            res.send(err)
+        }
+        if (user) {
+            res.json({success:true,result:user});
+        } else {
+            res.send("No user found with that ID")
+        }
+    });
+});
+
+router.post('/:id',function (req,res,next) {
+    User.findById(req.params.id, function (err, user) {
+        // Handle any possible database errors
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            user.firstName = req.body.firstName || user.firstName;
+            user.lastName = req.body.lastName || user.lastName;
+            user.phone = req.body.phone || user.phone;
+
+            // Save the updated document back to the database
+            user.save(function (err, doc) {
+                if (err) {
+                    res.status(500).send(err)
+                }
+                res.json({success:true,result:doc});
+            })
+        }
+    });
+});
+
 //profile
 router.get('/profile', passport.authenticate('jwt',{session:false}), function (req,res,next) {
    res.json({user : req.user});
 });
+
+/* router.get('/profile',function (req,res,next) {
+    passport.authenticate('jwt',{session:false}),function (err,user) {
+        console.log(err);
+     if(err) throw err;
+     if(!user) {
+         res.json({msg:'Authentication failed'});
+     }
+        res.json({user : req.user});
+    }
+}); */
 
 module.exports = router;
