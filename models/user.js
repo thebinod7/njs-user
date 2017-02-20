@@ -23,6 +23,9 @@ const UserSchema = mongoose.Schema({
         type : String,
         required : true
     },
+    newPassword : {
+        type : String
+    },
     profilePicUrl : {
         type : String
     }
@@ -53,5 +56,15 @@ module.exports.comparePassword = function (candidatePassword,hash,callback) {
     bcrypt.compare(candidatePassword,hash,function (err,isMatch) {
         if(err) throw err;
         callback(null,isMatch);
+    });
+}
+
+module.exports.changePassword = function (existUser,callback) {
+    bcrypt.genSalt(10, function(err, salt) {
+        bcrypt.hash(existUser, salt, function(err, hash) {
+            if (err) throw err;
+            existUser = hash;
+            existUser.save(callback);
+        });
     });
 }
