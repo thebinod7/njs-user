@@ -117,6 +117,7 @@ router.get('/:id',function (req,res,next) {
 });
 
 router.post('/:id',function (req,res,next) {
+    console.log(req.params.id);
     User.findById(req.params.id, function (err, user) {
         // Handle any possible database errors
         if (err) {
