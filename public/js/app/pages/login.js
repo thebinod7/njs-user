@@ -10,6 +10,7 @@ $(document).ready(function() {
             url: '/users/auth',
             success: function (data) {
                 console.log(data.token);
+                console.log(data.user.id);
                 if(data.user.id != null){
                     localStorage.setItem('userSession',JSON.stringify(data));
                     location.replace('/dashboard');
