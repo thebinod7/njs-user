@@ -2,19 +2,31 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/',function (req,res) {
-    res.render('index');
+    data = {
+        title: 'User Management System'
+    },
+    res.render('index',data);
 });
 
 router.get('/signup',function (req,res) {
-    res.render('signup');
+    data = {
+        title: 'User Management System'
+    },
+    res.render('/',data);
 });
 
 router.get('/login',function (req,res) {
-    res.render('login');
+    data = {
+        title: 'User Login'
+    },
+    res.render('login',data);
 });
 
 router.get('/dashboard',function (req,res) {
-    res.render('secure/dashboard');
+    data = {
+        title: 'Dashboard'
+    },
+    res.render('secure/dashboard',data);
 });
 
 router.get('/forgot',function (req,res) {

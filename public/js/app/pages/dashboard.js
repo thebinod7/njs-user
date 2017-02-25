@@ -40,7 +40,6 @@ $(document).ready(function() {
                data:data,
                url: '/users/' + userData.user.id,
                success: function (data) {
-                   console.log(data);
                    if(data.result._id != null){
                        $( "#msg" ).html( '<p class="text-success"><strong>Proile updated successfully.</strong></p>' );
                    }
