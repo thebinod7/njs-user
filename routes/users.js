@@ -7,7 +7,6 @@ const User = require('../models/user');
 
 //Register
 router.post('/register',function (req,res) {
-    console.log(req.body);
    const newUser = new User({
        firstName : req.body.firstName,
        lastName : req.body.lastName,
@@ -15,7 +14,6 @@ router.post('/register',function (req,res) {
        email : req.body.email,
        password : req.body.password
    });
-   console.log('Route:'+newUser);
    User.getUserByEmail(newUser.email,function (err,userEmail) {
        if(err) throw err;
        if(userEmail){
@@ -42,19 +40,20 @@ router.post('/register',function (req,res) {
 });
 
 router.post('/changePassword',function (req,res) {
-    const email = req.body.email;
+  //  const email = req.body.email;
     const existUser = {
+        email : req.body.email,
          password : req.body.password,
          newPassword : req.body.newPassword
     }
-    User.getUserByEmail(email,function (err,isUser) {
+    User.getUserByEmail(existUser.email,function (err,isUser) {
         if(err) throw err;
         if(isUser){
             User.comparePassword(existUser.password,isUser.password,function (err,isMatch) {
-                console.log(isMatch);
+                console.log('Match:' + isMatch);
                 if(err) throw err;
                 if(isMatch){
-                    User.changePassword(req.body.newPassword,function (err,doc) {
+                    User.changePassword(existUser,function (err,doc) {
                         if(err){
                             res.json({success : false, msg : 'Error occured,try again!'});
                         } else {
@@ -103,7 +102,6 @@ router.post('/auth',function (req,res) {
 });
 
 router.get('/:id',function (req,res,next) {
-    console.log(req.params.id);
     User.findById(req.params.id, function (err, user) {
         if (err) {
             res.send(err)
@@ -117,7 +115,6 @@ router.get('/:id',function (req,res,next) {
 });
 
 router.post('/:id',function (req,res,next) {
-    console.log(req.params.id);
     User.findById(req.params.id, function (err, user) {
         // Handle any possible database errors
         if (err) {

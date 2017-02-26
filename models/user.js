@@ -61,10 +61,12 @@ module.exports.comparePassword = function (candidatePassword,hash,callback) {
 
 module.exports.changePassword = function (existUser,callback) {
     bcrypt.genSalt(10, function(err, salt) {
-        bcrypt.hash(existUser, salt, function(err, hash) {
+        bcrypt.hash(existUser.newPassword, salt, function(err, hash) {
             if (err) throw err;
-            existUser = hash;
-            existUser.save(callback);
+            console.log('Exist Pass:'+existUser.newPassword);
+            existUser.newPassword = hash;
+            console.log(existUser);
+            User.update(existUser.email, {$set: {password: existUser.newPassword}}, callback);
         });
     });
 }
