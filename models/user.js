@@ -31,7 +31,18 @@ const UserSchema = mongoose.Schema({
     }
 });
 
+const SocialSchema = mongoose.Schema({
+    social_uuid : objectId,
+    socialId : {
+        type : String
+    },
+    appName : {
+        type : String
+    }
+});
+
 const User = module.exports = mongoose.model('User',UserSchema);
+const Social = module.exports = mongoose.model('Social',SocialSchema);
 
 module.exports.getUserById = function (id, callback) {
     User.findById(id,callback);
@@ -63,9 +74,8 @@ module.exports.changePassword = function (existUser,callback) {
     bcrypt.genSalt(10, function(err, salt) {
         bcrypt.hash(existUser.newPassword, salt, function(err, hash) {
             if (err) throw err;
-            console.log('Exist Pass:'+existUser.newPassword);
             existUser.newPassword = hash;
-            console.log(existUser);
+            console.log(existUser.newPassword);
             User.update(existUser.email, {$set: {password: existUser.newPassword}}, callback);
         });
     });

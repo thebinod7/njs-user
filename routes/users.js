@@ -4,6 +4,41 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const config = require('../config/database');
 const User = require('../models/user');
+const nodemailer = require('nodemailer');
+var fs = require('fs');
+var ejs = require('ejs');
+
+
+
+router.post('/sendEmail',function (req,res) {
+    var email = 'binod@rumsan.com';
+    var pass = 'T$mp1234';
+
+    var transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+            user: email,
+            pass: pass
+        }
+    });
+
+    var mailOptions = {
+        from: 'binod@rumsan.com', // sender address
+        to: 'thebinod7@gmail.com', // list of receivers
+        subject: 'Email Example', // Subject line
+        text: 'Hello world' //, // plaintext body
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+        if(error){
+            console.log(error);
+            res.json({yo: 'error'});
+        }else{
+            console.log('Message sent: ' + info.response);
+            res.json({yo: info.response});
+        };
+    });
+});
 
 //Register
 router.post('/register',function (req,res) {
@@ -20,14 +55,6 @@ router.post('/register',function (req,res) {
            res.json({msg:"Email already exists"})
        }
        else {
-          /* newUser.save(function (err,doc) {
-               console.log(err);
-               if(err){
-                   res.json({success : false, msg : 'Failed to register!'});
-               } else {
-                   res.json({success:true,msg:'Success',result:doc})
-               }
-           }); */
            User.addUser(newUser,function (err,doc) {
                if(err){
                    res.json({success : false, msg : 'Failed to register!'});
@@ -40,7 +67,6 @@ router.post('/register',function (req,res) {
 });
 
 router.post('/changePassword',function (req,res) {
-  //  const email = req.body.email;
     const existUser = {
         email : req.body.email,
          password : req.body.password,
@@ -54,6 +80,7 @@ router.post('/changePassword',function (req,res) {
                 if(err) throw err;
                 if(isMatch){
                     User.changePassword(existUser,function (err,doc) {
+                        console.log('doc:' + doc);
                         if(err){
                             res.json({success : false, msg : 'Error occured,try again!'});
                         } else {
