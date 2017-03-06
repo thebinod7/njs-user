@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title><%= title %></title>
+    <title>User Management System</title>
     <% include common/head%>
     <script src="/js/app/pages/signup.js" type="text/javascript"></script>
 </head>
@@ -15,7 +15,7 @@
             </div>
 
             <div class="col-md-5">
-                <form>
+                <form id="signupForm" action="/reqSignup" method="post">
                     <div class="row section-signup semitrans">
                         <div class="col-md-12">
                             <div id="msg"></div>
@@ -46,7 +46,8 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <button type="button" id="btnSignup" class="btn btn-primary btn-block">Sign up for free!</button>
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                <button type="submit" id="btnSignup" class="btn btn-primary btn-block">Sign up for free!</button>
                                 <hr />
                                 <p>Already have an account? <a href="login">Login</a></p>
                             </div>

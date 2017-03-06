@@ -10,9 +10,13 @@
   "dependencies": {
     "bcryptjs": "*",
     "body-parser": "*",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "*",
     "cors": "*",
+    "csurf": "^1.9.0",
     "ejs": "*",
     "express": "*",
+    "express-session": "^1.15.1",
     "jsonwebtoken": "*",
     "mongoose": "*",
     "nodemailer": "^3.1.4",

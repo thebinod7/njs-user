@@ -23,26 +23,29 @@ const UserSchema = mongoose.Schema({
         type : String,
         required : true
     },
-    newPassword : {
-        type : String
-    },
     profilePicUrl : {
         type : String
+    },
+    isActive : {
+        type : Boolean,
+        default : true
+    },
+    dateCreated : {
+        type : Date,
+        default : Date.now()
     }
 });
 
-const SocialSchema = mongoose.Schema({
-    social_uuid : objectId,
-    socialId : {
-        type : String
-    },
-    appName : {
-        type : String
-    }
-});
+UserSchema.method.encryptPassword = function (password) {
+    return bcrypt.hashSync(password,bcrypt.genSaltSync(5),null);
+}
+
+UserSchema.method.validPassword = function (password) {
+   return bcrypt.compareSync(password,this.password);
+}
+
 
 const User = module.exports = mongoose.model('User',UserSchema);
-const Social = module.exports = mongoose.model('Social',SocialSchema);
 
 module.exports.getUserById = function (id, callback) {
     User.findById(id,callback);
