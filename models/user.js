@@ -7,10 +7,12 @@ var objectId = mongoose.Schema.ObjectId;
 const UserSchema = mongoose.Schema({
     userId : objectId,
     firstName : {
-        type: String
+        type: String,
+        required : true
     },
     lastName : {
-        type : String
+        type : String,
+        require : true
     },
     phone : {
         type : String
@@ -35,15 +37,6 @@ const UserSchema = mongoose.Schema({
         default : Date.now()
     }
 });
-
-UserSchema.method.encryptPassword = function (password) {
-    return bcrypt.hashSync(password,bcrypt.genSaltSync(5),null);
-}
-
-UserSchema.method.validPassword = function (password) {
-   return bcrypt.compareSync(password,this.password);
-}
-
 
 const User = module.exports = mongoose.model('User',UserSchema);
 
